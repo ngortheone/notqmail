@@ -232,7 +232,7 @@ int comm_pos[CHANNELS];
 void comm_init()
 {
  int c;
- substdio_fdbuf(&sstoqc,write,5,sstoqcbuf,sizeof(sstoqcbuf));
+ substdio_fdbufw(&sstoqc,write,5,sstoqcbuf,sizeof(sstoqcbuf));
  substdio_fdbuf(&ssfromqc,read,6,ssfromqcbuf,sizeof(ssfromqcbuf));
  for (c = 0;c < CHANNELS;++c)
    if (ndelay_on(chanfdout[c]) == -1)
@@ -1321,7 +1321,7 @@ fd_set *rfds;
  for (c = 0;c < CHANNELS;++c) flagchan[c] = 0;
 
  substdio_fdbuf(&ss,read,fd,todobuf,sizeof(todobuf));
- substdio_fdbuf(&ssinfo,write,fdinfo,todobufinfo,sizeof(todobufinfo));
+ substdio_fdbufw(&ssinfo,write,fdinfo,todobufinfo,sizeof(todobufinfo));
 
  uid = 0;
  pid = 0;
@@ -1373,7 +1373,7 @@ fd_set *rfds;
 	 fdchan[c] = open_excl(fn.s);
 	 if (fdchan[c] == -1)
           { log3("warning: unable to create ",fn.s,"\n"); goto fail; }
-	 substdio_fdbuf(&sschan[c]
+	 substdio_fdbufw(&sschan[c]
 	   ,write,fdchan[c],todobufchan[c],sizeof(todobufchan[c]));
 	 flagchan[c] = 1;
 	}

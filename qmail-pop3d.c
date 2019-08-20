@@ -24,27 +24,27 @@ void die() { _exit(0); }
 
 extern int rename(const char *, const char *);
 
-int saferead(fd,buf,len) int fd; char *buf; int len;
+ssize_t saferead(int fd, void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutread(1200,fd,buf,len);
   if (r <= 0) die();
   return r;
 }
 
-int safewrite(fd,buf,len) int fd; char *buf; int len;
+ssize_t safewrite(int fd, const void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutwrite(1200,fd,buf,len);
   if (r <= 0) die();
   return r;
 }
 
 char sserrbuf[128];
-substdio sserr = SUBSTDIO_FDBUF(safewrite,2,sserrbuf,sizeof sserrbuf);
+substdio sserr = SUBSTDIO_FDBUFW(safewrite,2,sserrbuf,sizeof sserrbuf);
 
 char ssoutbuf[1024];
-substdio ssout = SUBSTDIO_FDBUF(safewrite,1,ssoutbuf,sizeof ssoutbuf);
+substdio ssout = SUBSTDIO_FDBUFW(safewrite,1,ssoutbuf,sizeof ssoutbuf);
 
 char ssinbuf[128];
 substdio ssin = SUBSTDIO_FDBUF(saferead,0,ssinbuf,sizeof ssinbuf);

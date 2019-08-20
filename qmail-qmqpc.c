@@ -34,23 +34,23 @@ void die_format() { _exit(91); }
 int lasterror = 55;
 int qmqpfd;
 
-int saferead(fd,buf,len) int fd; char *buf; int len;
+ssize_t saferead(int fd, void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutread(60,qmqpfd,buf,len);
   if (r <= 0) die_conn();
   return r;
 }
-int safewrite(fd,buf,len) int fd; char *buf; int len;
+ssize_t safewrite(int fd, const void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutwrite(60,qmqpfd,buf,len);
   if (r <= 0) die_conn();
   return r;
 }
 
 char buf[1024];
-substdio to = SUBSTDIO_FDBUF(safewrite,-1,buf,sizeof buf);
+substdio to = SUBSTDIO_FDBUFW(safewrite,-1,buf,sizeof buf);
 substdio from = SUBSTDIO_FDBUF(saferead,-1,buf,sizeof buf);
 substdio envelope = SUBSTDIO_FDBUF(read,1,buf,sizeof buf);
 /* WARNING: can use only one of these at a time! */

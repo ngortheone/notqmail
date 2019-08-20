@@ -197,7 +197,7 @@ int main(void)
  if (unlink(pidfn) == -1) die(63);
  flagmademess = 1;
 
- substdio_fdbuf(&ssout,write,messfd,outbuf,sizeof(outbuf));
+ substdio_fdbufw(&ssout,write,messfd,outbuf,sizeof(outbuf));
  substdio_fdbuf(&ssin,read,0,inbuf,sizeof(inbuf));
 
  if (substdio_bput(&ssout,received,receivedlen) == -1) die_write();
@@ -215,7 +215,7 @@ int main(void)
  if (intdfd == -1) die(65);
  flagmadeintd = 1;
 
- substdio_fdbuf(&ssout,write,intdfd,outbuf,sizeof(outbuf));
+ substdio_fdbufw(&ssout,write,intdfd,outbuf,sizeof(outbuf));
  substdio_fdbuf(&ssin,read,1,inbuf,sizeof(inbuf));
 
  if (substdio_bput(&ssout,"u",1) == -1) die_write();
