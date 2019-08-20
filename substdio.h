@@ -1,22 +1,46 @@
 #ifndef SUBSTDIO_H
 #define SUBSTDIO_H
 
+#include <sys/types.h>
+#include <unistd.h>
+
 typedef struct substdio {
   char *x;
   int p;
   int n;
   int fd;
-  int (*op)();
+  union {
+    ssize_t (*op)(int,void*,size_t);
+    ssize_t (*opw)(int,const void*,size_t);
+  };
 } substdio;
 
-#define SUBSTDIO_FDBUF(op,fd,buf,len) { (buf), 0, (len), (fd), (op) }
+#undef _QMAIL_HAS_C99
+#ifdef __STDC_VERSION__
+#if __STDC_VERSION__ >= 199901L
+#define _QMAIL_HAS_C99
+#endif
+#endif
 
-extern void substdio_fdbuf();
+#ifdef _QMAIL_HAS_C99
+#define SUBSTDIO_FDBUF(o,f,buf,len) { .x = (buf), .p = 0, .n = (len), .fd = (f), .op = (o) }
+#define SUBSTDIO_FDBUFW(o,f,buf,len) { .x = (buf), .p = 0, .n = (len), .fd = (f), .opw = (o) }
+#else
+#define SUBSTDIO_FDBUF(o,f,buf,len) { (buf), 0, (len), (f), (o) }
+#define SUBSTDIO_FDBUFW(o,f,buf,len) { (buf), 0, (len), (f), (o) }
+#endif
+
+extern void substdio_fdbuf(substdio *s, ssize_t (*op)(int,void*,size_t), int fd, char *buf, int len);
+static inline void substdio_fdbufw(substdio *s, ssize_t (*op)(int,const void*,size_t), int fd, char *buf, int len)
+{
+  substdio t = SUBSTDIO_FDBUFW(op, fd, buf, len);
+  *s = t;
+}
 
 extern int substdio_flush();
-extern int substdio_put();
-extern int substdio_bput();
-extern int substdio_putflush();
+extern int substdio_put(substdio *s, char *buf, size_t len);
+extern int substdio_bput(substdio *s, char *buf, size_t len);
+extern int substdio_putflush(substdio *s, char *buf, size_t len);
 extern int substdio_puts();
 extern int substdio_bputs();
 extern int substdio_putsflush();

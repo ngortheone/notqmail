@@ -115,7 +115,7 @@ char *dir;
  if (fd == -1) _exit(1);
 
  substdio_fdbuf(&ss,read,0,buf,sizeof(buf));
- substdio_fdbuf(&ssout,write,fd,outbuf,sizeof(outbuf));
+ substdio_fdbufw(&ssout,write,fd,outbuf,sizeof(outbuf));
  if (substdio_put(&ssout,rpline.s,rpline.len) == -1) goto fail;
  if (substdio_put(&ssout,dtline.s,dtline.len) == -1) goto fail;
 
@@ -194,7 +194,7 @@ char *fn;
  pos = seek_cur(fd);
 
  substdio_fdbuf(&ss,read,0,buf,sizeof(buf));
- substdio_fdbuf(&ssout,write,fd,outbuf,sizeof(outbuf));
+ substdio_fdbufw(&ssout,write,fd,outbuf,sizeof(outbuf));
  if (substdio_put(&ssout,ufline.s,ufline.len)) goto writeerrs;
  if (substdio_put(&ssout,rpline.s,rpline.len)) goto writeerrs;
  if (substdio_put(&ssout,dtline.s,dtline.len)) goto writeerrs;

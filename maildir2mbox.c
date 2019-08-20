@@ -76,7 +76,7 @@ int main(void)
    strerr_die4sys(111,FATAL,"unable to create ",mboxtmp,": ");
 
  substdio_fdbuf(&ssin,read,fdoldmbox,inbuf,sizeof(inbuf));
- substdio_fdbuf(&ssout,write,fdnewmbox,outbuf,sizeof(outbuf));
+ substdio_fdbufw(&ssout,write,fdnewmbox,outbuf,sizeof(outbuf));
 
  switch(substdio_copy(&ssout,&ssin))
   {

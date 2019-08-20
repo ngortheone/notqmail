@@ -12,7 +12,7 @@ void die_nomem() { strerr_die2x(111,FATAL,"out of memory"); }
 
 struct qmail qqt;
 
-int mywrite(fd,buf,len) int fd; char *buf; int len;
+ssize_t mywrite(int fd, const void *buf, size_t len)
 {
   qmail_put(&qqt,buf,len);
   return len;
@@ -21,7 +21,7 @@ int mywrite(fd,buf,len) int fd; char *buf; int len;
 char inbuf[SUBSTDIO_INSIZE];
 char outbuf[1];
 substdio ssin = SUBSTDIO_FDBUF(read,0,inbuf,sizeof inbuf);
-substdio ssout = SUBSTDIO_FDBUF(mywrite,-1,outbuf,sizeof outbuf);
+substdio ssout = SUBSTDIO_FDBUFW(mywrite,-1,outbuf,sizeof outbuf);
 
 char num[FMT_ULONG];
 

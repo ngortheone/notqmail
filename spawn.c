@@ -50,7 +50,7 @@ void sigchld()
 
 int flagwriting = 1;
 
-int okwrite(fd,buf,n) int fd; char *buf; int n;
+ssize_t okwrite(int fd, const void *buf, size_t n)
 {
  int w;
  if (!flagwriting) return n;
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
  d = (struct delivery *) alloc((auto_spawn + 10) * sizeof(struct delivery));
  if (!d) _exit(111);
 
- substdio_fdbuf(&ssout,okwrite,1,outbuf,sizeof(outbuf));
+ substdio_fdbufw(&ssout,okwrite,1,outbuf,sizeof(outbuf));
 
  sig_pipeignore();
  sig_childcatch(sigchld);
