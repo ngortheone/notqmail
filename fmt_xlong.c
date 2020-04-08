@@ -1,3 +1,5 @@
+#include "fmt.h"
+
 /* writes ulong u in hex to char *s, does not NULL-terminate */
 unsigned int fmt_xlong(char *s, unsigned long u)
 {
