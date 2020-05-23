@@ -103,22 +103,25 @@ char *dir;
  int fd;
  substdio ss;
  substdio ssout;
+ stralloc hostsa = {0};
+ size_t hostnamemaxlen = 256;
 
  sig_alarmcatch(sigalrm);
  if (chdir(dir) == -1) { if (error_temp(errno)) _exit(1); _exit(2); }
  pid = getpid();
- host[0] = 0;
- gethostname(host,sizeof(host));
+ if (!stralloc_ready(&hostsa,hostnamemaxlen)) temp_nomem();
+ if (!gethostname(hostsa.s,hostnamemaxlen)) error_temp(errno);
+ hostsa.s[hostnamemaxlen-1] = 0;
 
- s = host;
- for (loop = 0; loop < str_len(host); ++loop)
+ s = hostsa.s;
+ for (loop = 0; loop < str_len(hostsa.s); ++loop)
   {
-   if (host[loop] == '/')
+   if (hostsa.s[loop] == '/')
     {
      if (!stralloc_cats(&hostname,"\\057")) temp_nomem();
      continue;
     }
-   if (host[loop] == ':')
+   if (hostsa.s[loop] == ':')
     {
      if (!stralloc_cats(&hostname,"\\072")) temp_nomem();
      continue;
@@ -128,7 +131,7 @@ char *dir;
 
  for (loop = 0;;++loop)
   {
-   gettimeofday(&time, 0);
+   gettimeofday(&time, NULL);
    s = fntmptph;
    s += fmt_str(s,"tmp/");
    s += fmt_ulong(s,time.tv_sec); *s++ = '.';
