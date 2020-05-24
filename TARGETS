@@ -25,6 +25,7 @@ sgetopt.o
 getopt.a
 sig_alarm.o
 oflops.h
+hasstrchrnul.h
 hassgprm.h
 sig_block.o
 hassgact.h
@@ -90,6 +91,7 @@ error.o
 error_str.o
 error_temp.o
 error.a
+str_chr.c
 str_chr.o
 str_rchr.o
 str_start.o
