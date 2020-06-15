@@ -711,12 +711,9 @@ install:
 
 instcheck: \
 load instcheck.o instuidgid.o fifo.o hier.o auto_qmail.o auto_split.o uid.o \
-gid.o auto_usera.o auto_usero.o auto_userp.o auto_userq.o auto_userr.o \
-auto_users.o auto_groupq.o strerr.a substdio.a error.a str.a fs.a
+gid.o uids.a strerr.a substdio.a error.a str.a fs.a
 	./load instcheck instuidgid.o fifo.o hier.o auto_qmail.o auto_split.o \
-	uid.o gid.o auto_usera.o auto_usero.o auto_userp.o auto_userq.o \
-	auto_userr.o auto_users.o auto_groupq.o strerr.a substdio.a error.a \
-	str.a fs.a
+	uid.o gid.o uids.a strerr.a substdio.a error.a str.a fs.a
 
 instcheck.o: \
 compile instcheck.c strerr.h error.h readwrite.h hier.h
@@ -724,11 +721,9 @@ compile instcheck.c strerr.h error.h readwrite.h hier.h
 
 instchown: \
 load instchown.o instuidgid.o fifo.o hier.o auto_qmail.o auto_split.o uid.o \
-gid.o auto_usera.o auto_usero.o auto_userq.o auto_userr.o auto_users.o \
-auto_groupq.o strerr.a substdio.a error.a str.a fs.a
+gid.o uids.a strerr.a substdio.a error.a str.a fs.a
 	./load instchown instuidgid.o fifo.o hier.o auto_qmail.o auto_split.o \
-	uid.o gid.o auto_usera.o auto_usero.o auto_userq.o auto_userr.o \
-	auto_users.o auto_groupq.o strerr.a substdio.a error.a str.a fs.a
+	uid.o gid.o uids.a strerr.a substdio.a error.a str.a fs.a
 
 instchown.o: \
 compile instchown.c strerr.h error.h exit.h hier.h
@@ -1132,12 +1127,10 @@ qmail-log.5
 qmail-lspawn: \
 load qmail-lspawn.o spawn.o prot.o slurpclose.o coe.o sig.a wait.a \
 case.a cdb.a fd.a open.a stralloc.a substdio.a error.a str.a \
-fs.a auto_qmail.o uid.o gid.o auto_userp.o auto_userq.o auto_groupn.o \
-auto_spawn.o
+fs.a uids.a auto_qmail.o uid.o gid.o
 	./load qmail-lspawn spawn.o prot.o slurpclose.o coe.o sig.a wait.a \
 	case.a cdb.a fd.a open.a stralloc.a auto_qmail.o uid.o gid.o \
-	auto_userp.o auto_userq.o auto_groupn.o auto_spawn.o substdio.a \
-	error.a str.a fs.a
+	auto_spawn.o substdio.a uids.a error.a str.a fs.a
 
 qmail-lspawn.0: \
 qmail-lspawn.8
@@ -1439,13 +1432,10 @@ qmail-send.service.in conf-qmail
 	> qmail-send.service
 
 qmail-showctl: \
-load qmail-showctl.o uid.o gid.o auto_usera.o auto_userd.o auto_userl.o \
-auto_usero.o auto_userp.o auto_userq.o auto_userr.o auto_users.o auto_groupn.o \
-auto_groupq.o control.o open.a getln.a stralloc.a substdio.a error.a \
-str.a fs.a auto_qmail.o auto_break.o auto_patrn.o auto_spawn.o auto_split.o
-	./load qmail-showctl uid.o gid.o auto_usera.o auto_userd.o \
-	auto_userl.o auto_usero.o auto_userp.o auto_userq.o auto_userr.o \
-	auto_users.o auto_groupn.o auto_groupq.o control.o open.a getln.a \
+load qmail-showctl.o uid.o gid.o control.o open.a getln.a stralloc.a \
+substdio.a error.a uids.a str.a fs.a auto_qmail.o auto_break.o auto_patrn.o \
+auto_spawn.o auto_split.o
+	./load qmail-showctl uid.o gid.o control.o open.a getln.a uids.a \
 	stralloc.a substdio.a error.a str.a fs.a auto_qmail.o \
 	auto_break.o auto_patrn.o auto_spawn.o auto_split.o
 
@@ -1484,11 +1474,8 @@ exit.h rcpthosts.h timeoutread.h timeoutwrite.h commands.h
 	./compile qmail-smtpd.c
 
 qmail-start: \
-load qmail-start.o prot.o fd.a uid.o gid.o auto_userl.o auto_userq.o \
-auto_userr.o auto_users.o auto_groupn.o auto_groupq.o substdio.a error.a str.a
-	./load qmail-start prot.o fd.a uid.o gid.o auto_userl.o auto_userq.o \
-	auto_userr.o auto_users.o auto_groupn.o auto_groupq.o substdio.a \
-	error.a str.a
+load qmail-start.o prot.o fd.a uid.o gid.o substdio.a error.a str.a uids.a
+	./load qmail-start prot.o fd.a uid.o gid.o substdio.a error.a str.a uids.a
 
 qmail-start.0: \
 qmail-start.8
@@ -1922,6 +1909,13 @@ compile triggerpull.c ndelay.h open.h triggerpull.h
 uid.o: \
 compile uid.c uidgid.h subfd.h substdio.h exit.h
 	./compile uid.c
+
+uids.a: \
+makelib auto_usera.o auto_userd.o auto_userl.o auto_usero.o auto_userp.o \
+auto_userq.o auto_userr.o auto_users.o auto_groupn.o auto_groupq.o
+	./makelib uids.a auto_usera.o auto_userd.o auto_userl.o auto_usero.o \
+	auto_userp.o auto_userq.o auto_userr.o auto_users.o auto_groupn.o \
+	auto_groupq.o
 
 wait.a: \
 makelib wait_pid.o wait_nohang.o
