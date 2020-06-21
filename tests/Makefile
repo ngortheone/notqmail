@@ -9,7 +9,10 @@ default: it
 
 .PHONY: clean default it test
 
-TESTBINS = unittest_stralloc
+TESTBINS = unittest_case unittest_str unittest_stralloc
+
+CHECK_INCLUDES := `pkg-config --cflags check`
+CHECK_LIBS := `pkg-config --libs check`
 
 clean:
 	rm -f $(TESTBINS) *.o
@@ -21,12 +24,32 @@ test: it
 		./$$tbin || exit 1 ; \
 	done
 
+unittest_case: \
+../load unittest_case.o ../case.a
+	../load unittest_case ../case.a \
+	$(CHECK_LIBS)
+
+unittest_case.o: \
+../compile unittest_case.c ../case.h
+	../compile unittest_case.c -I.. \
+	$(CHECK_INCLUDES)
+
+unittest_str: \
+../load unittest_str.o ../str.a
+	../load unittest_str ../str.a \
+	$(CHECK_LIBS)
+
+unittest_str.o: \
+../compile unittest_str.c ../str.h
+	../compile unittest_str.c -I.. \
+	$(CHECK_INCLUDES)
+
 unittest_stralloc: \
 ../load unittest_stralloc.o ../stralloc.a ../str.a ../error.a
 	../load unittest_stralloc ../stralloc.a ../str.a ../error.a \
-	`pkg-config --libs check`
+	$(CHECK_LIBS)
 
 unittest_stralloc.o: \
 ../compile unittest_stralloc.c ../alloc.h ../stralloc.h
 	../compile unittest_stralloc.c -I.. \
-	`pkg-config --cflags check`
+	$(CHECK_INCLUDES)
