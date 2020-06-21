@@ -9,7 +9,15 @@ int prot_gid(gid_t gid)
   return setgid(gid); /* _should_ be redundant, but on some systems it isn't */
 }
 
-int prot_uid(uid_t uid)
+# define GROUP_COUNT 8
+int prot_gids(const char *user, gid_t gid)
 {
-  return setuid(uid);
+  gid_t gids[GROUP_COUNT];
+  int gcount = GROUP_COUNT;
+  int r = getgrouplist(user, gid, gids, &gcount);
+  /* member of too many groups */
+  if (r < 0)
+    return r;
+  if (setgroups(gcount,gids) == -1) return -1;
+  return setgid(gid); /* _should_ be redundant, but on some systems it isn't */
 }
