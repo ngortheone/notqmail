@@ -9,7 +9,7 @@ default: it
 
 .PHONY: clean default it test
 
-TESTBINS = unittest_stralloc
+TESTBINS = unittest_stralloc unittest_cdb
 
 CHECK_INCLUDES := `pkg-config --cflags check`
 CHECK_LIBS := `pkg-config --libs check`
@@ -34,3 +34,11 @@ unittest_stralloc: \
 
 unittest_stralloc.o: \
 ../alloc.h ../stralloc.h
+
+unittest_cdb: \
+../load unittest_cdb.o ../cdb.a
+	../load unittest_cdb ../cdb.a \
+	$(CHECK_LIBS)
+
+unittest_cdb.o: \
+../cdb.h ../uint32.h
