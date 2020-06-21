@@ -9,7 +9,7 @@ default: it
 
 .PHONY: clean default it test
 
-TESTBINS = unittest_case unittest_str unittest_stralloc
+TESTBINS = unittest_case unittest_cdb unittest_str unittest_stralloc
 
 CHECK_INCLUDES := `pkg-config --cflags check`
 CHECK_LIBS := `pkg-config --libs check`
@@ -24,15 +24,16 @@ test: it
 		./$$tbin || exit 1 ; \
 	done
 
+%.o: %.c ../compile
+	../compile $< -I.. $(CHECK_INCLUDES)
+
 unittest_case: \
 ../load unittest_case.o ../case.a
 	../load unittest_case ../case.a \
 	$(CHECK_LIBS)
 
 unittest_case.o: \
-../compile unittest_case.c ../case.h
-	../compile unittest_case.c -I.. \
-	$(CHECK_INCLUDES)
+../case.h
 
 unittest_str: \
 ../load unittest_str.o ../str.a
@@ -40,9 +41,7 @@ unittest_str: \
 	$(CHECK_LIBS)
 
 unittest_str.o: \
-../compile unittest_str.c ../str.h
-	../compile unittest_str.c -I.. \
-	$(CHECK_INCLUDES)
+../str.h
 
 unittest_stralloc: \
 ../load unittest_stralloc.o ../stralloc.a ../str.a ../error.a
@@ -50,6 +49,12 @@ unittest_stralloc: \
 	$(CHECK_LIBS)
 
 unittest_stralloc.o: \
-../compile unittest_stralloc.c ../alloc.h ../stralloc.h
-	../compile unittest_stralloc.c -I.. \
-	$(CHECK_INCLUDES)
+../alloc.h ../stralloc.h
+
+unittest_cdb: \
+../load unittest_cdb.o ../cdb.a
+	../load unittest_cdb ../cdb.a \
+	$(CHECK_LIBS)
+
+unittest_cdb.o: \
+../cdb.h ../uint32.h

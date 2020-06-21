@@ -1,5 +1,6 @@
 *.o
 unittest_byte
+unittest_cdb
 unittest_str
 unittest_stralloc
 unittest_case
