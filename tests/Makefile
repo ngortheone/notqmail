@@ -11,6 +11,9 @@ default: it
 
 TESTBINS = unittest_stralloc
 
+CHECK_INCLUDES := `pkg-config --cflags check`
+CHECK_LIBS := `pkg-config --libs check`
+
 clean:
 	rm -f $(TESTBINS) *.o
 
@@ -21,12 +24,13 @@ test: it
 		./$$tbin || exit 1 ; \
 	done
 
+%.o: %.c ../compile
+	../compile $< -I.. $(CHECK_INCLUDES)
+
 unittest_stralloc: \
 ../load unittest_stralloc.o ../stralloc.a ../str.a ../error.a
 	../load unittest_stralloc ../stralloc.a ../str.a ../error.a \
-	`pkg-config --libs check`
+	$(CHECK_LIBS)
 
 unittest_stralloc.o: \
-../compile unittest_stralloc.c ../alloc.h ../stralloc.h
-	../compile unittest_stralloc.c -I.. \
-	`pkg-config --cflags check`
+../alloc.h ../stralloc.h
