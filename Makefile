@@ -916,7 +916,7 @@ qmail-lspawn.o: \
 fd.h wait.h prot.h substdio.h stralloc.h \
 gen_alloc.h scan.h exit.h fork.h error.h cdb.h uint32.h case.h \
 slurpclose.h uidgid.h auto_qmail.h auto_uids.h auto_users.h qlx.h byte.h \
-open.h
+open.h spawn.h
 
 qmail-newmrh: \
 load qmail-newmrh.o cdbmss.o getln.a open.a cdbmake.a case.a \
@@ -1154,7 +1154,7 @@ qmail-rspawn.0: \
 qmail-rspawn.8
 
 qmail-rspawn.o: \
-fd.h wait.h substdio.h exit.h fork.h error.h env.h tcpto.h
+fd.h wait.h substdio.h exit.h fork.h error.h env.h tcpto.h spawn.h
 
 qmail-send: \
 load qmail-send.o qsutil.o control.o constmap.o newfield.o prioq.o \
@@ -1412,7 +1412,7 @@ trylsock.c compile load
 spawn.o: \
 compile chkspawn spawn.c sig.h wait.h substdio.h byte.h str.h \
 stralloc.h gen_alloc.h select.h exit.h alloc.h coe.h open.h error.h \
-auto_qmail.h auto_uids.h auto_spawn.h
+auto_qmail.h auto_uids.h auto_spawn.h spawn.h
 	./chkspawn
 	./compile spawn.c
 
