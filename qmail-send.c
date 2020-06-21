@@ -2,6 +2,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <utime.h>
+#include "hasutbuf.h"
 #include "readwrite.h"
 #include "sig.h"
 #include "direntry.h"
@@ -451,14 +452,22 @@ void pqfinish()
 {
  int c;
  struct prioq_elt pe;
+#ifdef HASUTBUF
+ struct utimbuf ut[1];
+#else
  time_t ut[2]; /* XXX: more portable than utimbuf, but still worrisome */
+#endif
 
  for (c = 0;c < CHANNELS;++c)
    while (prioq_min(&pqchan[c],&pe))
     {
      prioq_delmin(&pqchan[c]);
      fnmake_chanaddr(pe.id,c);
+#ifdef HASUTBUF
+     ut[0].actime = ut[0].modtime = pe.dt;
+#else
      ut[0] = ut[1] = pe.dt;
+#endif
      if (utime(fn.s,ut) == -1)
        log3("warning: unable to utime ",fn.s,"; message will be retried too soon\n");
     }
