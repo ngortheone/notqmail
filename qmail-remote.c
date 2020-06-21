@@ -106,25 +106,26 @@ int timeoutconnect = 60;
 int smtpfd;
 int timeout = 1200;
 
-int saferead(fd,buf,len) int fd; char *buf; int len;
+ssize_t saferead(int fd, void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutread(timeout,smtpfd,buf,len);
-  if (r <= 0) dropped();
+  if (r == 0 || r == -1) dropped();
   return r;
 }
-int safewrite(fd,buf,len) int fd; char *buf; int len;
+
+ssize_t safewrite(int fd, const void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutwrite(timeout,smtpfd,buf,len);
-  if (r <= 0) dropped();
+  if (r == 0 || r == -1) dropped();
   return r;
 }
 
 char inbuf[1024];
 substdio ssin = SUBSTDIO_FDBUF(read,0,inbuf,sizeof inbuf);
 char smtptobuf[1024];
-substdio smtpto = SUBSTDIO_FDBUF(safewrite,-1,smtptobuf,sizeof smtptobuf);
+substdio smtpto = SUBSTDIO_FDBUFW(safewrite,-1,smtptobuf,sizeof smtptobuf);
 char smtpfrombuf[128];
 substdio smtpfrom = SUBSTDIO_FDBUF(saferead,-1,smtpfrombuf,sizeof smtpfrombuf);
 

@@ -46,7 +46,7 @@ struct qmail *qq;
 
   qq->fdm = pim[1]; close(pim[0]);
   qq->fde = pie[1]; close(pie[0]);
-  substdio_fdbuf(&qq->ss,write,qq->fdm,qq->buf,sizeof(qq->buf));
+  substdio_fdbufw(&qq->ss,write,qq->fdm,qq->buf,sizeof(qq->buf));
   qq->flagerr = 0;
   return 0;
 }
@@ -61,21 +61,16 @@ void qmail_fail(qq) struct qmail *qq;
   qq->flagerr = 1;
 }
 
-void qmail_put(qq,s,len) struct qmail *qq; char *s; unsigned int len;
+void qmail_put(struct qmail *qq, char *s, size_t len)
 {
   if (!qq->flagerr) if (substdio_put(&qq->ss,s,len) == -1) qq->flagerr = 1;
-}
-
-void qmail_puts(qq,s) struct qmail *qq; char *s;
-{
-  if (!qq->flagerr) if (substdio_puts(&qq->ss,s) == -1) qq->flagerr = 1;
 }
 
 void qmail_from(qq,s) struct qmail *qq; char *s;
 {
   if (substdio_flush(&qq->ss) == -1) qq->flagerr = 1;
   close(qq->fdm);
-  substdio_fdbuf(&qq->ss,write,qq->fde,qq->buf,sizeof(qq->buf));
+  substdio_fdbufw(&qq->ss,write,qq->fde,qq->buf,sizeof(qq->buf));
   qmail_put(qq,"F",1);
   qmail_puts(qq,s);
   qmail_put(qq,"",1);

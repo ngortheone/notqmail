@@ -2,16 +2,10 @@
 #include "byte.h"
 #include "error.h"
 
-static int oneread(op,fd,buf,len)
-register int (*op)();
-register int fd;
-register char *buf;
-register int len;
+static ssize_t oneread(ssize_t (*op)(int,void*,size_t), int fd, char *buf, size_t len)
 {
-  register int r;
-
   for (;;) {
-    r = op(fd,buf,len);
+    ssize_t r = op(fd,buf,len);
     if (r == -1) if (errno == error_intr) continue;
     return r;
   }
@@ -33,16 +27,15 @@ register int len;
   return r;
 }
 
-int substdio_feed(s)
-register substdio *s;
+ssize_t substdio_feed(substdio *s)
 {
-  register int r;
+  ssize_t r;
   register int q;
 
   if (s->p) return s->p;
   q = s->n;
   r = oneread(s->op,s->fd,s->x,q);
-  if (r <= 0) return r;
+  if (r == 0 || r == -1) return r;
   s->p = r;
   q -= r;
   s->n = q;
@@ -50,16 +43,14 @@ register substdio *s;
   return r;
 }
 
-int substdio_get(s,buf,len)
-register substdio *s;
-register char *buf;
-register int len;
+ssize_t substdio_get(substdio *s, char *buf, size_t len)
 {
-  register int r;
+  ssize_t r;
  
   if (s->p > 0) return getthis(s,buf,len);
   if (s->n <= len) return oneread(s->op,s->fd,buf,len);
-  r = substdio_feed(s); if (r <= 0) return r;
+  r = substdio_feed(s);
+  if (r == 0 || r == -1) return r;
   return getthis(s,buf,len);
 }
 

@@ -93,7 +93,7 @@ int main(void)
      if (fstat(fdtty,&st) == -1) { close(fdtty); continue; }
      if (!(st.st_mode & 0100)) { close(fdtty); continue; }
      if (st.st_uid != getuid()) { close(fdtty); continue; }
-     substdio_fdbuf(&sstty,write,fdtty,buftty,sizeof(buftty));
+     substdio_fdbufw(&sstty,write,fdtty,buftty,sizeof(buftty));
      substdio_putflush(&sstty,woof.s,woof.len);
      close(fdtty);
     }

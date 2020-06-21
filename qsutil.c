@@ -6,7 +6,7 @@
 static stralloc foo = {0};
 
 static char errbuf[1];
-static struct substdio sserr = SUBSTDIO_FDBUF(write,0,errbuf,1);
+static struct substdio sserr = SUBSTDIO_FDBUFW(write,0,errbuf,1);
 
 void logsa(sa) stralloc *sa; {
  substdio_putflush(&sserr,sa->s,sa->len); }

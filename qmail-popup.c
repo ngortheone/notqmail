@@ -16,24 +16,24 @@
 
 void die() { _exit(1); }
 
-int saferead(fd,buf,len) int fd; char *buf; int len;
+ssize_t saferead(int fd, void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutread(1200,fd,buf,len);
-  if (r <= 0) die();
+  if (r == 0 || r == -1) die();
   return r;
 }
 
-int safewrite(fd,buf,len) int fd; char *buf; int len;
+ssize_t safewrite(int fd, const void *buf, size_t len)
 {
-  int r;
+  ssize_t r;
   r = timeoutwrite(1200,fd,buf,len);
-  if (r <= 0) die();
+  if (r == 0 || r == -1) die();
   return r;
 }
 
 char ssoutbuf[128];
-substdio ssout = SUBSTDIO_FDBUF(safewrite,1,ssoutbuf,sizeof ssoutbuf);
+substdio ssout = SUBSTDIO_FDBUFW(safewrite,1,ssoutbuf,sizeof ssoutbuf);
 
 char ssinbuf[128];
 substdio ssin = SUBSTDIO_FDBUF(saferead,0,ssinbuf,sizeof ssinbuf);
@@ -101,7 +101,7 @@ char *pass;
       _exit(1);
   }
   close(pi[0]);
-  substdio_fdbuf(&ssup,write,pi[1],upbuf,sizeof upbuf);
+  substdio_fdbufw(&ssup,write,pi[1],upbuf,sizeof upbuf);
   if (substdio_put(&ssup,user,userlen) == -1) die_write();
   if (substdio_put(&ssup,pass,str_len(pass) + 1) == -1) die_write();
   if (substdio_puts(&ssup,"<") == -1) die_write();
