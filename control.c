@@ -27,7 +27,7 @@ stralloc *sa;
     }
 }
 
-int control_init()
+int control_init(void)
 {
  int r;
  r = control_readline(&me,"control/me");
@@ -35,11 +35,7 @@ int control_init()
  return r;
 }
 
-int control_rldef(sa,fn,flagme,def)
-stralloc *sa;
-char *fn;
-int flagme;
-char *def;
+int control_rldef(stralloc *sa, const char *fn, int flagme, char *def)
 {
  int r;
  r = control_readline(sa,fn);
@@ -49,9 +45,7 @@ char *def;
  return r;
 }
 
-int control_readline(sa,fn)
-stralloc *sa;
-char *fn;
+int control_readline(stralloc *sa, const char *fn)
 {
  substdio ss;
  int fd;
@@ -69,9 +63,7 @@ char *fn;
  return 1;
 }
 
-int control_readint(i,fn)
-int *i;
-char *fn;
+int control_readint(int *i, const char *fn)
 {
  unsigned long u;
  switch(control_readline(&line,fn))
@@ -85,10 +77,7 @@ char *fn;
  return 1;
 }
 
-int control_readfile(sa,fn,flagme)
-stralloc *sa;
-char *fn;
-int flagme;
+int control_readfile(stralloc *sa, const char *fn, int flagme)
 {
  substdio ss;
  int fd;
