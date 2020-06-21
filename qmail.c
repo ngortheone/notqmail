@@ -61,17 +61,17 @@ void qmail_fail(qq) struct qmail *qq;
   qq->flagerr = 1;
 }
 
-void qmail_put(qq,s,len) struct qmail *qq; char *s; unsigned int len;
+void qmail_put(struct qmail *qq, const char *s, unsigned int len)
 {
   if (!qq->flagerr) if (substdio_put(&qq->ss,s,len) == -1) qq->flagerr = 1;
 }
 
-void qmail_puts(qq,s) struct qmail *qq; char *s;
+void qmail_puts(struct qmail *qq, const char *s)
 {
   if (!qq->flagerr) if (substdio_puts(&qq->ss,s) == -1) qq->flagerr = 1;
 }
 
-void qmail_from(qq,s) struct qmail *qq; char *s;
+void qmail_from(struct qmail *qq, const char *s)
 {
   if (substdio_flush(&qq->ss) == -1) qq->flagerr = 1;
   close(qq->fdm);
@@ -81,7 +81,7 @@ void qmail_from(qq,s) struct qmail *qq; char *s;
   qmail_put(qq,"",1);
 }
 
-void qmail_to(qq,s) struct qmail *qq; char *s;
+void qmail_to(struct qmail *qq, const char *s)
 {
   qmail_put(qq,"T",1);
   qmail_puts(qq,s);
