@@ -1534,10 +1534,10 @@ fmt.h ip.h lock.h error.h exit.h datetime.h now.h datetime.h open.h
 	./compile qmail-tcpto.c
 
 qmail-todo: \
-load qmail-todo.o control.o constmap.o trigger.o fmtqfn.o now.o \
+load qmail-todo.o control.o constmap.o trigger.o fmtqfn.o \
 readsubdir.o case.a ndelay.a getln.a sig.a open.a stralloc.a alloc.a \
 substdio.a error.a str.a fs.a auto_qmail.o auto_split.o
-	./load qmail-todo control.o constmap.o trigger.o fmtqfn.o now.o \
+	./load qmail-todo control.o constmap.o trigger.o fmtqfn.o \
 	readsubdir.o case.a ndelay.a getln.a sig.a open.a stralloc.a \
 	alloc.a substdio.a error.a str.a fs.a auto_qmail.o auto_split.o
 
